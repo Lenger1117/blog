@@ -15,7 +15,13 @@ class PostController extends Controller
      */
     public function index()
     {
-        //
+        // Получение всех опубликованных постов (сортировка по новизне)
+        $posts = Post::where('is_published', true)
+            ->with(['user', 'category'])
+            ->latest()
+            ->paginate(10);
+        
+            return view('posts.index', compact('posts'));
     }
 
     /**
@@ -61,9 +67,14 @@ class PostController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(string $slug)
     {
-        //
+        // Поиск поста по slug
+        $post = Post::where('slug', $slug)
+            ->with(['user', 'category', 'comments.user'])
+            ->firstOrFail();
+
+        return view('posts.show', compact('post'));
     }
 
     /**
