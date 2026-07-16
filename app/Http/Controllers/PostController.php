@@ -4,14 +4,17 @@ namespace App\Http\Controllers;
 
 use App\Models\Category;
 use App\Models\Post;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
 class PostController extends Controller
 {
+    use AuthorizesRequests;
     /**
-     * Display a listing of the resource.
+     * Отобразить список постов.
      */
     public function index()
     {
@@ -25,7 +28,7 @@ class PostController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
+     * Отобразить форму для создания нового поста.
      */
     public function create()
     {
@@ -34,7 +37,7 @@ class PostController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Сохранить созданный пост в хранилище.
      */
     public function store(Request $request)
     {
@@ -65,7 +68,7 @@ class PostController extends Controller
     }
 
     /**
-     * Display the specified resource.
+     * Отобразить указанный пост.
      */
     public function show(string $slug)
     {
@@ -78,26 +81,62 @@ class PostController extends Controller
     }
 
     /**
-     * Show the form for editing the specified resource.
+     * Отобразить форму для редактирования указанного поста.
      */
-    public function edit(string $id)
+    public function edit(Post $post)
     {
-        //
+        // Проверка прав: может ли текущий пользователь редактировать этот пост?
+        $this->authorize('update', $post);
+
+        $categories = Category::all();
+        return view('posts.edit', compact('post', 'categories'));
     }
 
     /**
-     * Update the specified resource in storage.
+     * Обновить указанный пост в хранилище.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, Post $post)
     {
-        //
+        $this->authorize('update', $post);
+
+        $validated = $request->validate([
+            'title' => 'required|string|max:255',
+            'body' => 'required|string',
+            'category_id' => 'required|exists:categories,id',
+            'cover_image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+        ]);
+
+        // Если загружена новая картинка
+        if ($request->hasFile('cover_image')) {
+            // Удаляем старую картинку, если она есть
+            if ($post->cover_image) {
+                Storage::disk('public')->delete($post->cover_image);
+            }
+            $validated['cover_image'] = $request->file('cover_image')->store('covers', 'public');
+        }
+
+        // Обновляем slug, если изменился заголовок
+        $validated['slug'] = \Illuminate\Support\Str::slug($validated['title']);
+
+        $post->update($validated);
+
+        return redirect()->route('posts.show', $post->slug)->with('success', 'Статья обновлена!');
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Удалить указанный пост из хранилища.
      */
-    public function destroy(string $id)
+    public function destroy(Post $post)
     {
-        //
+        $this->authorize('delete', $post);
+
+        // Удаляем картинку при удалении поста
+        if ($post->cover_image) {
+            Storage::disk('public')->delete($post->cover_image);
+        }
+
+        $post->delete();
+
+        return redirect()->route('posts.index')->with('success', 'Статья удалена.');
     }
 }
