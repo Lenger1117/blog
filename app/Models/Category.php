@@ -14,9 +14,16 @@ class Category extends Model
         'name',
         'slug',
     ];
+
     // У категории много постов
     public function posts()
     {
         return $this->hasMany(Post::class);
+    }
+
+    // Поиск категории по slug
+    public function getRouteKeyName() 
+    {
+        return 'slug';
     }
 }

@@ -6,6 +6,13 @@ use Illuminate\Database\Eloquent\Model;
 
 class Comment extends Model
 {
+    // Разрешение заполнения полей
+    protected $fillable = [
+        'body',
+        'user_id',
+        'post_id'
+    ];
+    
     // Комментарий принадлежит пользователю
     public function user()
     {

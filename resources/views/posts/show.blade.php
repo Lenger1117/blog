@@ -44,4 +44,58 @@
             </div>
         </div>
     </div>
+
+    <!-- Секция комментариев -->
+    <div class="mt-10 pt-6 border-t">
+        <h3 class="text-xl font-bold mb-4">Комментарии ({{ $post->comments->count() }})</h3>
+
+        <!-- Форма добавления (только для авторизованных) -->
+        @auth
+        <form action="{{ route('comments.store', $post) }}" method="POST" class="mb-8">
+            @csrf
+            <div class="mb-4">
+                <textarea name="body" rows="3" class="w-full border-gray-300 rounded-md shadow-sm" placeholder="Напишите ваш комментарий..." required></textarea>
+                @error('body')
+                <span class="text-red-500 text-sm">{{ $message }}</span>
+                @enderror
+            </div>
+            <button type="submit" class="bg-green-500 hover:bg-green-700 text-black font-bold py-2 px-4 rounded">
+                Отправить
+            </button>
+        </form>
+        @else
+        <p class="mb-4 text-gray-500"><a href="{{ route('login') }}" class="text-blue-500">Войдите</a>, чтобы оставить комментарий.</p>
+        @endauth
+
+        <!-- Список комментариев -->
+        <div class="space-y-6">
+            @forelse($post->comments as $comment)
+            <div class="bg-gray-50 p-4 rounded-lg">
+                <div class="flex justify-between items-start">
+                    <div class="font-semibold text-gray-800">
+                        {{ $comment->user->name }}
+                    </div>
+                    <div class="text-xs text-gray-500">
+                        {{ $comment->created_at->diffForHumans() }}
+
+                        <!-- Кнопка удаления (если это комментарий пользователя) -->
+                        @if(Auth::id() === $comment->user_id)
+                        <form action="{{ route('comments.destroy', $comment) }}" method="POST" class="inline ml-2">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit" class="text-red-500 hover:text-red-700 text-xs" onclick="return confirm('Удалить комментарий?')">
+                                Удалить
+                            </button>
+                        </form>
+                        @endif
+                    </div>
+                </div>
+                <p class="mt-2 text-gray-700 whitespace-pre-line">{{ $comment->body }}</p>
+            </div>
+            @empty
+            <p class="text-gray-500 italic">Пока нет комментариев. Будьте первым!</p>
+            @endforelse
+        </div>
+    </div>
+
 </x-app-layout>

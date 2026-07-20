@@ -14,6 +14,19 @@
                     Написать статью
                 </a>
             </div>
+                    <!-- Блок категорий -->
+                    <div class="mb-6 flex flex-wrap gap-2">
+                        <span class="font-bold text-gray-700 mr-2">Категории:</span>
+                        @php
+                            $categories = \App\Models\Category::all();
+                        @endphp
+                        @foreach($categories as $cat)
+                            <a href="{{ route('categories.show', $cat->slug) }}" 
+                               class="px-3 py-1 bg-gray-200 rounded-full text-sm hover:bg-gray-300 {{ isset($category) && $category->id === $cat->id ? 'bg-blue-500 text-white' : '' }}">
+                                {{ $cat->name }}
+                            </a>
+                        @endforeach
+                    </div>
 
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 text-gray-900">
@@ -25,6 +38,11 @@
                                 {{ $post->title }}
                             </a>
                         </h3>
+                                                    <div class="flex gap-2 mb-2">
+                                @foreach($post->tags as $tag)
+                                    <span class="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded">#{{ $tag->name }}</span>
+                                @endforeach
+                            </div>
 
                         <div class="text-sm text-gray-600 mb-4">
                             Автор: {{ $post->user->name }} |

@@ -20,7 +20,7 @@ class PostController extends Controller
     {
         // Получение всех опубликованных постов (сортировка по новизне)
         $posts = Post::where('is_published', true)
-            ->with(['user', 'category'])
+            ->with(['user', 'category', 'tags'])
             ->latest()
             ->paginate(10);
         
