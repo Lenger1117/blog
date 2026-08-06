@@ -14,19 +14,19 @@
                     Написать статью
                 </a>
             </div>
-                    <!-- Блок категорий -->
-                    <div class="mb-6 flex flex-wrap gap-2">
-                        <span class="font-bold text-gray-700 mr-2">Категории:</span>
-                        @php
-                            $categories = \App\Models\Category::all();
-                        @endphp
-                        @foreach($categories as $cat)
-                            <a href="{{ route('categories.show', $cat->slug) }}" 
-                               class="px-3 py-1 bg-gray-200 rounded-full text-sm hover:bg-gray-300 {{ isset($category) && $category->id === $cat->id ? 'bg-blue-500 text-white' : '' }}">
-                                {{ $cat->name }}
-                            </a>
-                        @endforeach
-                    </div>
+            <!-- Блок категорий -->
+            <div class="mb-6 flex flex-wrap gap-2">
+                <span class="font-bold text-gray-700 mr-2">Категории:</span>
+                @php
+                $categories = \App\Models\Category::all();
+                @endphp
+                @foreach($categories as $cat)
+                <a href="{{ route('categories.show', $cat->slug) }}"
+                    class="px-3 py-1 bg-gray-200 rounded-full text-sm hover:bg-gray-300 {{ isset($category) && $category->id === $cat->id ? 'bg-blue-500 text-white' : '' }}">
+                    {{ $cat->name }}
+                </a>
+                @endforeach
+            </div>
 
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 text-gray-900">
@@ -38,11 +38,11 @@
                                 {{ $post->title }}
                             </a>
                         </h3>
-                                                    <div class="flex gap-2 mb-2">
-                                @foreach($post->tags as $tag)
-                                    <span class="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded">#{{ $tag->name }}</span>
-                                @endforeach
-                            </div>
+                        <div class="flex gap-2 mb-2">
+                            @foreach($post->tags as $tag)
+                            <span class="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded">#{{ $tag->name }}</span>
+                            @endforeach
+                        </div>
 
                         <div class="text-sm text-gray-600 mb-4">
                             Автор: {{ $post->user->name }} |
@@ -62,16 +62,23 @@
                         <a href="{{ route('posts.show', $post->slug) }}" class="text-blue-500 hover:text-blue-700 font-semibold">
                             Читать далее &rarr;
                         </a>
-                    </article>
+
+                        @can('update', $post)
                     <div class="flex gap-2 mt-2">
-                        <a href="{{ route('posts.edit', $post->slug) }}" class="text-yellow-600 hover:underline">Редактировать</a>
+                        <a href="{{ route('posts.edit', $post->slug) }}" class="text-yellow-600 hover:underline">
+                            Редактировать
+                        </a>
 
                         <form action="{{ route('posts.destroy', $post->slug) }}" method="POST" onsubmit="return confirm('Удалить статью?');">
                             @csrf
                             @method('DELETE')
-                            <button type="submit" class="text-red-600 hover:underline">Удалить</button>
+                            <button type="submit" class="text-red-600 hover:underline">
+                                Удалить
+                            </button>
                         </form>
                     </div>
+                    @endcan
+                    </article>
                     @empty
                     <p>Статей пока нет. Будь первым!</p>
                     @endforelse
