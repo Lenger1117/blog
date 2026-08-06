@@ -15,6 +15,18 @@
                     <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
                         {{ __('Dashboard') }}
                     </x-nav-link>
+
+                                    <!-- Ссылка на Блог (видна всем авторизованным) -->
+                <x-nav-link :href="route('posts.index')" :active="request()->routeIs('posts.*')">
+                    {{ __('Блог') }}
+                </x-nav-link>
+
+                <!-- Ссылка на Админку (видна ТОЛЬКО админам) -->
+                @if(auth()->user()->is_admin)
+                    <x-nav-link :href="route('admin.dashboard')" :active="request()->routeIs('admin.*')">
+                        {{ __('Админка') }}
+                    </x-nav-link>
+                @endif
                 </div>
             </div>
 
