@@ -4,6 +4,7 @@ use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\CommentController;
+use App\Http\Controllers\Admin\DashboardController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -39,6 +40,12 @@ Route::middleware('auth')->group(function () {
     // Роуты для категорий
     Route::get('/categories', [CategoryController::class, 'index'])->name('categories.index');
     Route::get('/categories/{category}', [CategoryController::class, 'show'])->name('categories.show');
+
+    // Роуты для админов
+    Route::middleware(['auth', 'admin'])->prefix('admin')->group(function (){
+        Route::get('/', [DashboardController::class, 'index'])->name('admin.dashboard');
+        Route::delete('/users/{user}', [DashboardController::class, 'banUser'])->name('admin.banUser');
+    });
 });
 
 require __DIR__.'/auth.php';

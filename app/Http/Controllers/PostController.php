@@ -57,14 +57,14 @@ class PostController extends Controller
         // Создание поста
         Post::create([
             'title' => $validated['title'],
-            'slug' => Str::slug($validated['title']),
+            'slug' => $this->generateUniqueSlug($validated['title']),
             'body' => $validated['body'],
             'category_id' => $validated['category_id'],
             'user_id' => Auth::id(),
             'cover_image' => $path,
             'is_published' => true,
         ]);
-        return redirect()->route('post.index') ->with('success', 'Статья успешно создана');
+        return redirect()->route('posts.index') ->with('success', 'Статья успешно создана');
     }
 
     /**
@@ -116,7 +116,7 @@ class PostController extends Controller
         }
 
         // Обновляем slug, если изменился заголовок
-        $validated['slug'] = \Illuminate\Support\Str::slug($validated['title']);
+        $validated['slug'] = $this->generateUniqueSlug($validated['title']);
 
         $post->update($validated);
 
@@ -138,5 +138,23 @@ class PostController extends Controller
         $post->delete();
 
         return redirect()->route('posts.index')->with('success', 'Статья удалена.');
+    }
+
+    /**
+     * Генерация уникального slug
+     */
+    private function generateUniqueSlug(string $title): string
+    {
+        $slug = \Illuminate\Support\Str::slug($title);
+        $originalSlug = $slug;
+        $count = 1;
+
+        // Проверка, есть ли уже такой slug в базе
+        while (Post::where('slug', $slug)->exists()) {
+            $slug = $originalSlug . '-' . $count;
+            $count++;
+        }
+
+        return $slug;
     }
 }
