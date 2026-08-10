@@ -58,6 +58,6 @@ php artisan serve
 ### Теперь приложение доступно по адресу: http://127.0.0.1:8000
 
 # Скриншоты
-![Главная страница блога](screenshots/blog.png)
-![Страница одной статьи](screenshots/post.png)
-![Админ-панель](screenshots/admin.png)
+!Главная страница блога(screenshots/blog.png)
+!Страница одной статьи(screenshots/post.png)
+!Админ-панель(screenshots/admin.png)
