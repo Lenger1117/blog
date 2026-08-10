@@ -59,5 +59,5 @@ php artisan serve
 
 # Скриншоты
 ![Главная страница блога](screenshots/blog.png)
-!Страница одной статьи(screenshots/post.png)
-!Админ-панель(screenshots/admin.png)
+![Страница одной статьи](screenshots/post.png)
+![Админ-панель](screenshots/admin.png)
