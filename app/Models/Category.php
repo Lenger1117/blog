@@ -9,7 +9,7 @@ class Category extends Model
 {
     use HasFactory;
 
-    // Разрешение массового заполнения этих полей
+    // Разрешение заполнения полей
     protected $fillable = [
         'name',
         'slug',

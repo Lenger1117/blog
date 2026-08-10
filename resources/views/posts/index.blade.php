@@ -50,7 +50,7 @@
                             Дата: {{ $post->created_at->format('d.m.Y') }}
                         </div>
 
-                        <!-- Если есть картинка, показываем её -->
+                        <!-- Если есть изображение, показываем его -->
                         @if($post->cover_image)
                         <img src="{{ asset('storage/' . $post->cover_image) }}" alt="{{ $post->title }}" class="w-full h-64 object-cover rounded mb-4">
                         @endif

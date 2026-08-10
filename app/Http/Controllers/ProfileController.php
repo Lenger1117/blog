@@ -12,7 +12,7 @@ use Illuminate\View\View;
 class ProfileController extends Controller
 {
     /**
-     * Display the user's profile form.
+     * Отобразить форму профиля пользователя
      */
     public function edit(Request $request): View
     {
@@ -22,7 +22,7 @@ class ProfileController extends Controller
     }
 
     /**
-     * Update the user's profile information.
+     * Изменить информацию в профиле пользователя
      */
     public function update(ProfileUpdateRequest $request): RedirectResponse
     {
@@ -38,7 +38,7 @@ class ProfileController extends Controller
     }
 
     /**
-     * Delete the user's account.
+     * Удалить аккаунт пользователя
      */
     public function destroy(Request $request): RedirectResponse
     {

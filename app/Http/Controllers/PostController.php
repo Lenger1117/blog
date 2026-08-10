@@ -14,7 +14,7 @@ class PostController extends Controller
 {
     use AuthorizesRequests;
     /**
-     * Отобразить список постов.
+     * Отобразить список постов
      */
     public function index()
     {
@@ -28,7 +28,7 @@ class PostController extends Controller
     }
 
     /**
-     * Отобразить форму для создания нового поста.
+     * Отобразить форму для создания нового поста
      */
     public function create()
     {
@@ -37,7 +37,7 @@ class PostController extends Controller
     }
 
     /**
-     * Сохранить созданный пост в хранилище.
+     * Сохранить созданный пост в хранилище
      */
     public function store(Request $request)
     {
@@ -48,7 +48,7 @@ class PostController extends Controller
             'category_id' => 'required|exists:categories,id',
             'cover_imade' => 'nullable|imade|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
-        // Обработка картинка (если есть)
+        // Обработка изображения (если есть)
         $path = null;
         if ($request->hasFile('cover_image')) {
             $path = $request->file('cover_image')->store('covers', 'public');
@@ -68,7 +68,7 @@ class PostController extends Controller
     }
 
     /**
-     * Отобразить указанный пост.
+     * Отобразить указанный пост
      */
     public function show(string $slug)
     {
@@ -81,7 +81,7 @@ class PostController extends Controller
     }
 
     /**
-     * Отобразить форму для редактирования указанного поста.
+     * Отобразить форму для редактирования указанного поста
      */
     public function edit(Post $post)
     {
@@ -93,7 +93,7 @@ class PostController extends Controller
     }
 
     /**
-     * Обновить указанный пост в хранилище.
+     * Обновить указанный пост
      */
     public function update(Request $request, Post $post)
     {
@@ -106,16 +106,16 @@ class PostController extends Controller
             'cover_image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
 
-        // Если загружена новая картинка
+        // Если загружена новое изображение
         if ($request->hasFile('cover_image')) {
-            // Удаляем старую картинку, если она есть
+            // Удаляем старое изображение, если оно есть
             if ($post->cover_image) {
                 Storage::disk('public')->delete($post->cover_image);
             }
             $validated['cover_image'] = $request->file('cover_image')->store('covers', 'public');
         }
 
-        // Обновляем slug, если изменился заголовок
+        // Обновление slug, если изменился заголовок
         $validated['slug'] = $this->generateUniqueSlug($validated['title']);
 
         $post->update($validated);
@@ -124,13 +124,13 @@ class PostController extends Controller
     }
 
     /**
-     * Удалить указанный пост из хранилища.
+     * Удалить указанный пост
      */
     public function destroy(Post $post)
     {
         $this->authorize('delete', $post);
 
-        // Удаляем картинку при удалении поста
+        // Удаляем изображение при удалении поста
         if ($post->cover_image) {
             Storage::disk('public')->delete($post->cover_image);
         }

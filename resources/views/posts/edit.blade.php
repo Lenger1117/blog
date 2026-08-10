@@ -20,7 +20,7 @@
                         </div>
                     @endif
 
-                    <!-- Важно: метод PUT и маршрут update -->
+                    <!-- метод PUT и маршрут update -->
                     <form method="POST" action="{{ route('posts.update', $post->slug) }}" enctype="multipart/form-data">
                         @csrf
                         @method('PUT') <!-- Симуляция метода PUT -->

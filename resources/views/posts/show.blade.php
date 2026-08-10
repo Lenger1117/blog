@@ -21,7 +21,7 @@
                     @endif
 
                     <div class="prose max-w-none text-gray-800">
-                        {!! nl2br(e($post->body)) !!} <!-- Выводим текст, сохраняя переносы строк -->
+                        {!! nl2br(e($post->body)) !!} <!-- Вывод текста, сохраняя переносы строк -->
                     </div>
 
                     <div class="mt-8 pt-4 border-t">
